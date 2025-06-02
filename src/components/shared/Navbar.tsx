@@ -1,8 +1,11 @@
-
+'use client'
+import { useUser } from "@/context/UserContext";
 import { Button } from "../ui/button";
 import { Heart, ShoppingBag } from "lucide-react";
 
 export default function Navbar() {
+  const {user} = useUser()
+  console.log('user from navbar',user)
   return (
     <header className="border-b w-full">
       <div className="container flex justify-between items-center mx-auto h-16 px-3">
