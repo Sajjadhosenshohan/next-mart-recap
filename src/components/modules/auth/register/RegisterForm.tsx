@@ -16,7 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterUser } from "@/services/AuthService";
 import { toast } from "sonner";
 import Link from "next/link";
-import { registrationSchema } from "./registerValidation";
+import { registrationSchema } from "./RegisterValidation";
 const RegisterForm = () => {
   const form = useForm({
     resolver: zodResolver(registrationSchema),

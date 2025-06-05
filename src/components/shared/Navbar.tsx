@@ -1,18 +1,26 @@
-'use client'
+"use client";
 import { useUser } from "@/context/UserContext";
 import { Button } from "../ui/button";
-import { Heart, ShoppingBag } from "lucide-react";
+import { Heart, LogOutIcon, ShoppingBag } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import Link from "next/link";
+import { logout } from "@/services/AuthService";
 export default function Navbar() {
-  const {user} = useUser()
-  console.log('user from navbar',user)
+  const { user, setIsLoading } = useUser();
+  console.log("user from navbar", user);
   return (
-    <header className="border-b w-full">
+    <header className="border-b w-full bg-white">
       <div className="container flex justify-between items-center mx-auto h-16 px-3">
-        <h1 className="text-2xl font-black flex items-center">
-   
-          Next Mart
-        </h1>
+        <h1 className="text-2xl font-black flex items-center">Next Mart</h1>
         <div className="max-w-md  flex-grow">
           <input
             type="text"
@@ -27,6 +35,57 @@ export default function Navbar() {
           <Button variant="outline" className="rounded-full p-0 size-10">
             <ShoppingBag />
           </Button>
+          {user ? (
+            <>
+              <Link href="/create-shop">
+                <Button variant="outline" className="rounded-full px-2 h-10">
+                  Create Shop
+                </Button>
+              </Link>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  asChild
+                  className="flex items-center justify-center  h-10 w-10"
+                >
+                  <Avatar className="">
+                    <AvatarImage
+                      className="w-full h-full"
+                      src="https://github.com/shadcn.png"
+                      alt="@shadcn"
+                    />
+                    <AvatarFallback>user</AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                  <DropdownMenuLabel className="text-center">{user?.name}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem>Dashboard</DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem>Profile</DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem>My Shop</DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem>
+                    My Account
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    className="cursor-pointer text-red-500"
+                    onClick={() => {
+                      logout();
+                      setIsLoading(true);
+                    }}
+                  >
+                    <LogOutIcon /> Logout
+                  </DropdownMenuCheckboxItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          ) : (
+            <Link href="/login">
+              <Button variant="outline" className="rounded-full px-2 h-10">
+                login
+              </Button>
+            </Link>
+          )}
         </nav>
       </div>
     </header>

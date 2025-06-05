@@ -21,6 +21,7 @@ import {
   GoogleReCaptchaCheckbox,
   GoogleReCaptchaProvider,
 } from "@google-recaptcha/react";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
   const form = useForm({
@@ -32,6 +33,7 @@ const LoginForm = () => {
   });
 
   const [recaptchaStatus, setRecaptchaStatus] = useState(false)
+  const router = useRouter()
 
   const {
     formState: { isSubmitting },
@@ -42,6 +44,7 @@ const LoginForm = () => {
       const res = await LoginUser(data);
       if (res.success) {
         toast.success(res?.message || "User login successfully");
+        router.push('/')
       } else {
         toast.error(res?.message || "Failed to login user");
       }

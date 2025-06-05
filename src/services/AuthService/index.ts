@@ -58,6 +58,9 @@ export const getCurrentUser = async () => {
     return Error(error);
   }
 };
+export const logout = async()=> {
+  (await cookies()).delete("accessToken");
+}
 
 export const recaptchaVerification  = async (token:string) => {
   try {
