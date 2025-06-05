@@ -17,6 +17,8 @@ import { RegisterUser } from "@/services/AuthService";
 import { toast } from "sonner";
 import Link from "next/link";
 import { registrationSchema } from "./RegisterValidation";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 const RegisterForm = () => {
   const form = useForm({
     resolver: zodResolver(registrationSchema),
@@ -32,15 +34,23 @@ const RegisterForm = () => {
     formState: { isSubmitting },
   } = form;
 
+    const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirectPath");
+
   const password = form.watch("password");
   const passwordConfirm = form.watch("passwordConfirm");
 
   const handleRegisterData: SubmitHandler<FieldValues> = async (data) => {
     try {
       const res = await RegisterUser(data);
-      console.log(res);
       if (res.success) {
         toast.success(res?.message || "User register successfully");
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/");
+        }
       } else {
         toast.error(res?.message || "Failed to register user");
       }

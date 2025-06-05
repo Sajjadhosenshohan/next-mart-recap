@@ -21,7 +21,7 @@ import {
   GoogleReCaptchaCheckbox,
   GoogleReCaptchaProvider,
 } from "@google-recaptcha/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const LoginForm = () => {
   const form = useForm({
@@ -32,8 +32,10 @@ const LoginForm = () => {
     },
   });
 
-  const [recaptchaStatus, setRecaptchaStatus] = useState(false)
-  const router = useRouter()
+  const [recaptchaStatus, setRecaptchaStatus] = useState(false);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirectPath");
 
   const {
     formState: { isSubmitting },
@@ -44,7 +46,11 @@ const LoginForm = () => {
       const res = await LoginUser(data);
       if (res.success) {
         toast.success(res?.message || "User login successfully");
-        router.push('/')
+        if (redirect) {
+          router.push(redirect);
+        } else {
+          router.push("/");
+        }
       } else {
         toast.error(res?.message || "Failed to login user");
       }
@@ -53,18 +59,17 @@ const LoginForm = () => {
     }
   };
 
-
-  const handleCaptcha = async(value:string | null)=> {
-   try {
-    const res = await recaptchaVerification(value!)
-    console.log(res)
-    if(res?.success){
-setRecaptchaStatus(true)
+  const handleCaptcha = async (value: string | null) => {
+    try {
+      const res = await recaptchaVerification(value!);
+      console.log(res);
+      if (res?.success) {
+        setRecaptchaStatus(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
-   } catch (error) {
-    console.error(error)
-   }
-  }
+  };
   return (
     <section className="mx-auto w-full max-w-lg border-2 border-white rounded-3xl py-10 px-12">
       <h1 className="text-4xl font-bold mb-4 text-center">login</h1>
@@ -115,9 +120,7 @@ setRecaptchaStatus(true)
               type="v2-checkbox"
               siteKey={process.env.NEXT_PUBLIC_RECAPTCHA_CLIENT_KEY as string}
             >
-              <GoogleReCaptchaCheckbox
-                onChange={handleCaptcha}
-              />
+              <GoogleReCaptchaCheckbox onChange={handleCaptcha} />
             </GoogleReCaptchaProvider>
           </div>
 
