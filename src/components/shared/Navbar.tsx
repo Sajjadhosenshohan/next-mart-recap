@@ -14,9 +14,21 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import Link from "next/link";
 import { logout } from "@/services/AuthService";
+import { usePathname, useRouter } from "next/navigation";
+import { protectedRoutes } from "@/const";
 export default function Navbar() {
   const { user, setIsLoading } = useUser();
-  console.log("user from navbar", user);
+  const pathname = usePathname()
+  const router = useRouter()
+  // console.log("user from navbar", user);
+
+  const handleLogout = () => {
+    logout();
+    setIsLoading(true);
+    if(protectedRoutes.some((r)=> pathname.match(r))){
+      router.push('/')
+    }
+  };
   return (
     <header className="border-b w-full bg-white">
       <div className="container flex justify-between items-center mx-auto h-16 px-3">
@@ -38,7 +50,7 @@ export default function Navbar() {
           {user ? (
             <>
               <Link href="/create-shop">
-                <Button variant="outline" className="rounded-full px-2 h-10">
+                <Button variant="outline" className="rounded-full px-2 h-10 cursor-pointer">
                   Create Shop
                 </Button>
               </Link>
@@ -58,9 +70,15 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56">
-                  <DropdownMenuLabel className="text-center">{user?.name}</DropdownMenuLabel>
+                  <DropdownMenuLabel className="text-center">
+                    {user?.name}
+                  </DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuCheckboxItem>Dashboard</DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem>
+                    <Link href={`/${user?.role}/dashboard`}>
+                    Dashboard
+                    </Link>
+                  </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem>Profile</DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem>My Shop</DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem>
@@ -69,10 +87,7 @@ export default function Navbar() {
                   <DropdownMenuSeparator />
                   <DropdownMenuCheckboxItem
                     className="cursor-pointer text-red-500"
-                    onClick={() => {
-                      logout();
-                      setIsLoading(true);
-                    }}
+                    onClick={handleLogout}
                   >
                     <LogOutIcon /> Logout
                   </DropdownMenuCheckboxItem>

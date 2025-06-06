@@ -13,7 +13,7 @@ const publicRoutes = ["/login", "/register"];
 
 const roleBasedRoutes = {
   user: [/^\/user/],
-  admin: [/^\/admin/],
+  admin: [/^\/admin/,'/create-shop'],
 };
 
 export const middleware = async (request: NextRequest) => {
@@ -54,5 +54,12 @@ export const middleware = async (request: NextRequest) => {
 
 // Match protected routes
 export const config = {
-  matcher: ["/login", "/create-shop", "/user", "/user/:page", "/admin", "/admin/:page"],
+  matcher: [
+    "/login",
+    "/create-shop",
+    "/user",
+    "/user/:page",
+    "/admin",
+    "/admin/:page"
+  ],
 };
