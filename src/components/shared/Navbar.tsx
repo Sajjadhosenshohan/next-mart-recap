@@ -80,7 +80,9 @@ export default function Navbar() {
                     </Link>
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem>Profile</DropdownMenuCheckboxItem>
-                  <DropdownMenuCheckboxItem>My Shop</DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem><Link href={`/${user?.role}/shop/category`}>
+                    My Shop
+                    </Link></DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem>
                     My Account
                   </DropdownMenuCheckboxItem>
